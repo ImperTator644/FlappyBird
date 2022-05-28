@@ -4,9 +4,10 @@ import javax.swing.*;
 
 public class GameFrame extends JFrame {
     private final ImageIcon background = new ImageIcon("src/images/background.png");
-    private final GamePanel panel = new GamePanel("", background, JLabel.CENTER);
+    private final GamePanel panel;
 
-    public GameFrame() {
+    public GameFrame(Player player) {
+        panel = new GamePanel("", background, JLabel.CENTER, player);
         this.add(panel);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setResizable(false);
