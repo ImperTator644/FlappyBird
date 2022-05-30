@@ -8,8 +8,8 @@ import java.io.IOException;
 public class Player {
     private final String name;
     private Image image;
-    private final int PLAYERX            = 100;
     private int playerY = GamePanel.SCREEN_HEIGHT / 2;
+    private int score = 0;
 
     public Player(String name){
         this.name = name;
@@ -51,6 +51,15 @@ public class Player {
     }
 
     public int getPLAYERX() {
+        int PLAYERX = 100;
         return PLAYERX;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    public int getScore() {
+        return score;
     }
 }
