@@ -2,6 +2,8 @@ package flappyBird;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -9,22 +11,26 @@ public class Score {
     private final Element[] items = new Element[5];
 
     public Score(){
-        for(int i=0; i< items.length; i++) items[i] = new Element(0, "brak");
+        for(int i=0; i< items.length; i++) items[i] = new Element(0, "---");
         try (Scanner scanner = new Scanner(new File("src/HighScore.txt"))){
             int iterator = 0;
             while(iterator < 5 && scanner.hasNext()){
                 items[iterator].score = scanner.nextInt();
-                items[iterator].name = scanner.nextLine();
+                items[iterator].name = scanner.nextLine().replace(" ", "");
                 iterator++;
             }
         }
-        catch (FileNotFoundException fnfe){
+        catch (FileNotFoundException fnfe) {
             fnfe.printStackTrace();
         }
     }
 
     public int getLast(){
         return items[4].score;
+    }
+
+    public String printItem(int i){
+        return items[i].name +" - "+ items[i].score;
     }
 
     public void insert(int score, String name){
@@ -41,11 +47,21 @@ public class Score {
         }
     }
 
+    public void saveScores(){
+        try(FileWriter fw = new FileWriter("src/HighScore.txt", false)){
+            for(Element i:items){
+                fw.write(i.toString());
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override public String toString(){
         return Arrays.toString(items);
     }
 
-    private class Element{
+    private static class Element{
         private int score;
         private String name;
 
