@@ -2,6 +2,7 @@ package flappyBird;
 
 import javax.swing.*;
 
+//Konrad tu byl
 public class GameFrame extends JFrame {
     private final ImageIcon background = new ImageIcon("src/images/background.png");
     private final GamePanel panel;
