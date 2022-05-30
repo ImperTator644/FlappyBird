@@ -9,16 +9,4 @@ public class Main {
         var frame = new GameFrame(player);
         frame.startGame();
     }
-    /*
-    public static void main(String[] args) {
-        Score score = new Score();
-        System.out.println(score);
-        score.insert(3, "Maciek");
-        System.out.println(score);
-        score.insert(1, "CEP");
-        System.out.println(score);
-        score.insert(12, "CEP");
-        System.out.println(score);
-    }
-    */
 }
