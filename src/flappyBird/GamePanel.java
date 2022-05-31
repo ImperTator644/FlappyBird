@@ -18,6 +18,7 @@ public class GamePanel extends JLabel implements ActionListener {
 
     private final Player player;
     private final Score highScores;
+    private final Obstacle obstacle;
     protected static final int SCREEN_WIDTH = 500;
     protected static final int SCREEN_HEIGHT = 700;
     protected static final int UNIT_SIZE = 10;
@@ -27,8 +28,6 @@ public class GamePanel extends JLabel implements ActionListener {
     protected static final int MOVE_TIMER_DELAY = 100;
     protected static final int FLY_TIMER_DELAY = 20;
     protected static final int TIMER_DELAY = 30;
-    private int obstaclePosX            = 0;
-    private int obstaclePosY            = 0;
     private boolean running             = false;
     private boolean jump                = false;
     private boolean restart             = false;
@@ -43,6 +42,7 @@ public class GamePanel extends JLabel implements ActionListener {
 
     public GamePanel(String s, ImageIcon background, int center, Player player) {
         super(s,background,center);
+        this.obstacle = new Obstacle();
         this.player = player;
         this.highScores = new Score();
         random = new Random();
@@ -76,6 +76,7 @@ public class GamePanel extends JLabel implements ActionListener {
                 }
             } else {
                 level = 1;
+                gameTimer.setDelay(TIMER_DELAY);
                 gap = 20 * UNIT_SIZE;
                 player.setPlayerY(SCREEN_HEIGHT / 2);
                 player.setScore(0);
@@ -136,8 +137,8 @@ public class GamePanel extends JLabel implements ActionListener {
             else g.fillRect(player.getPLAYERX(), player.getPlayerY(), PLAYER_SIZE, PLAYER_SIZE);
             
             g.setColor(new Color(34,69,6));
-            g.fillRect(obstaclePosX, 0, UNIT_SIZE * 2, obstaclePosY);
-            g.fillRect(obstaclePosX, obstaclePosY + gap, UNIT_SIZE * 2, SCREEN_HEIGHT);
+            g.fillRect(obstacle.getObstaclePosX(), 0, UNIT_SIZE * 2, obstacle.getObstaclePosY());
+            g.fillRect(obstacle.getObstaclePosX(), obstacle.getObstaclePosY()+ gap, UNIT_SIZE * 2, SCREEN_HEIGHT);
 
             g.setColor(Color.red);
             g.setFont(new Font("Showcard gothic", Font.BOLD, 25));
@@ -179,13 +180,13 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     private void newObstacle() {
-        obstaclePosY = random.nextInt((SCREEN_HEIGHT - gap) / UNIT_SIZE) * UNIT_SIZE;
-        obstaclePosX = SCREEN_WIDTH - 2 * UNIT_SIZE;
+        obstacle.setObstaclePosY(random.nextInt((SCREEN_HEIGHT - gap) / UNIT_SIZE) * UNIT_SIZE);
+        obstacle.setObstaclePosX(SCREEN_WIDTH - 2 * UNIT_SIZE);
     }
 
     private void obstacleMove() {
-        obstaclePosX -= UNIT_SIZE;
-        if (obstaclePosX == 0) {
+        obstacle.decObstacleX(UNIT_SIZE);
+        if (obstacle.getObstaclePosX() == 0) {
             newObstacle();
             player.setScore(player.getScore()+1);
             checkLevel = true;
@@ -195,12 +196,13 @@ public class GamePanel extends JLabel implements ActionListener {
     private void checkCollisions() {
         if (player.getPlayerY() < UNIT_SIZE || player.getPlayerY() > SCREEN_HEIGHT - UNIT_SIZE)
             running = false;
-        else if (obstaclePosX == player.getPLAYERX()
-                || obstaclePosX + UNIT_SIZE == player.getPLAYERX()
-                || obstaclePosX + 2 * UNIT_SIZE == player.getPLAYERX()
-                || obstaclePosX - UNIT_SIZE == player.getPLAYERX()
-                || obstaclePosX - 2 * UNIT_SIZE == player.getPLAYERX()) {
-            if (player.getPlayerY() < obstaclePosY || player.getPlayerY() + PLAYER_SIZE > obstaclePosY + gap) running = false;
+        else if (obstacle.getObstaclePosX() == player.getPLAYERX()
+                || obstacle.getObstaclePosX() + UNIT_SIZE == player.getPLAYERX()
+                || obstacle.getObstaclePosX() + 2 * UNIT_SIZE == player.getPLAYERX()
+                || obstacle.getObstaclePosX() - UNIT_SIZE == player.getPLAYERX()
+                || obstacle.getObstaclePosX() - 2 * UNIT_SIZE == player.getPLAYERX()) {
+            if (player.getPlayerY() < obstacle.getObstaclePosY()
+                    || player.getPlayerY() + PLAYER_SIZE > obstacle.getObstaclePosY() + gap) running = false;
         }
     }
 
@@ -213,6 +215,7 @@ public class GamePanel extends JLabel implements ActionListener {
             level++;
             if(level > 5) gap -= UNIT_SIZE;
             else gap -= 2 * UNIT_SIZE;
+            if (level == 5)gameTimer.setDelay(TIMER_DELAY - 10);
         }
         repaint();
     }
