@@ -64,20 +64,24 @@ public class GamePanel extends JLabel implements ActionListener {
                     else player.addPlayerY(UNIT_SIZE);
                 }
                 if (player.getPlayerY() < UNIT_SIZE) {
-                    player.setPlayerY(UNIT_SIZE);
+                    running = false;
+                    //player.setPlayerY(UNIT_SIZE);
                 } else if (player.getPlayerY() > SCREEN_HEIGHT - UNIT_SIZE) {
-                    player.setPlayerY(SCREEN_HEIGHT - UNIT_SIZE);
+                    running = false;
+                    //player.setPlayerY(SCREEN_HEIGHT - UNIT_SIZE);
                 }
                 if (running) {
                     obstacleMove();
                     checkCollisions();
                 }
             } else {
-                running = true;
-                restart = false;
                 level = 1;
                 gap = 20 * UNIT_SIZE;
                 player.setPlayerY(SCREEN_HEIGHT / 2);
+                player.setScore(0);
+                checkLevel = false;
+                restart = false;
+                running = true;
                 newObstacle();
             }
             repaint();
