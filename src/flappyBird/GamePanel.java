@@ -12,7 +12,7 @@ public class GamePanel extends JLabel implements ActionListener {
 
     protected enum Movement {NONE, UP, DOWN}
 
-    protected enum ExitReset {RESET, EXIT}
+    protected enum ExitReset {RESET, EXIT,NONE}
 
     private GamePanel.Movement movement = GamePanel.Movement.NONE;
 
@@ -26,7 +26,7 @@ public class GamePanel extends JLabel implements ActionListener {
     private int level = 1;
     protected static final int MOVE_TIMER_DELAY = 100;
     protected static final int FLY_TIMER_DELAY = 20;
-    protected static final int TIMER_DELAY = 50;
+    protected static final int TIMER_DELAY = 30;
     private int obstaclePosX            = 0;
     private int obstaclePosY            = 0;
     private boolean running             = false;
@@ -55,20 +55,20 @@ public class GamePanel extends JLabel implements ActionListener {
         addKeyReleasedBinding("up.released", KeyEvent.VK_W, new MoveUDAction(GamePanel.Movement.NONE));
         addKeyPressedBinding("down.pressed", KeyEvent.VK_S, new MoveUDAction(GamePanel.Movement.DOWN));
         addKeyReleasedBinding("down.released", KeyEvent.VK_S, new MoveUDAction(GamePanel.Movement.NONE));
+        addKeyPressedBinding("up.pressed", KeyEvent.VK_UP, new MoveUDAction(GamePanel.Movement.UP));
+        addKeyReleasedBinding("up.released", KeyEvent.VK_UP, new MoveUDAction(GamePanel.Movement.NONE));
+        addKeyPressedBinding("down.pressed", KeyEvent.VK_DOWN, new MoveUDAction(GamePanel.Movement.DOWN));
+        addKeyReleasedBinding("down.released", KeyEvent.VK_DOWN, new MoveUDAction(GamePanel.Movement.NONE));
+        addKeyPressedBinding("exit.pressed", KeyEvent.VK_ESCAPE, new ResetGame(ExitReset.EXIT));
+        addKeyReleasedBinding("exit.released", KeyEvent.VK_ESCAPE, new ResetGame(ExitReset.NONE));
         addKeyPressedBinding("reset.pressed", KeyEvent.VK_R, new ResetGame(ExitReset.RESET));
+
 
         gameTimer = new Timer(TIMER_DELAY, e -> {
             if (!restart) {
                 if (!jump) {
                     if(dive) player.addPlayerY(UNIT_SIZE * 2);
                     else player.addPlayerY(UNIT_SIZE);
-                }
-                if (player.getPlayerY() < UNIT_SIZE) {
-                    running = false;
-                    //player.setPlayerY(UNIT_SIZE);
-                } else if (player.getPlayerY() > SCREEN_HEIGHT - UNIT_SIZE) {
-                    running = false;
-                    //player.setPlayerY(SCREEN_HEIGHT - UNIT_SIZE);
                 }
                 if (running) {
                     obstacleMove();
@@ -128,7 +128,11 @@ public class GamePanel extends JLabel implements ActionListener {
     private void draw(Graphics g) {
         if (running) {
             g.setColor(Color.red);
-            if(isImage) g.drawImage(player.getImage(),player.getPLAYERX(),player.getPlayerY(),PLAYER_SIZE,PLAYER_SIZE,this);
+            if(isImage) {
+                if(jump) g.drawImage(player.getBirdFly(),player.getPLAYERX(),player.getPlayerY(),PLAYER_SIZE,PLAYER_SIZE,this);
+                else if(dive) g.drawImage(player.getBirdDive(),player.getPLAYERX(),player.getPlayerY(),PLAYER_SIZE,PLAYER_SIZE,this);
+                else g.drawImage(player.getBird(),player.getPLAYERX(),player.getPlayerY(),PLAYER_SIZE,PLAYER_SIZE,this);
+            }
             else g.fillRect(player.getPLAYERX(), player.getPlayerY(), PLAYER_SIZE, PLAYER_SIZE);
             
             g.setColor(new Color(34,69,6));
@@ -136,7 +140,7 @@ public class GamePanel extends JLabel implements ActionListener {
             g.fillRect(obstaclePosX, obstaclePosY + gap, UNIT_SIZE * 2, SCREEN_HEIGHT);
 
             g.setColor(Color.red);
-            g.setFont(new Font("Ink Free", Font.BOLD, 25));
+            g.setFont(new Font("Showcard gothic", Font.BOLD, 25));
             FontMetrics metrics = getFontMetrics(g.getFont());
             g.drawString("Player: " + player.getName(), 0, g.getFont().getSize());
             g.drawString("Level: " + level, 0, 50);
@@ -148,18 +152,18 @@ public class GamePanel extends JLabel implements ActionListener {
 
     public void gameOver(Graphics g) {
         g.setColor(Color.red);
-        g.setFont(new Font("Ink Free", Font.BOLD, 30));
+        g.setFont(new Font("Showcard gothic",Font.BOLD, 30));
         FontMetrics metrics = getFontMetrics(g.getFont());
         g.drawString("1. " + highScores.printItem(0), (SCREEN_WIDTH - metrics.stringWidth("1. " + highScores.printItem(0))) / 2, 100);
         g.drawString("2. " + highScores.printItem(1), (SCREEN_WIDTH - metrics.stringWidth("2. " + highScores.printItem(1))) / 2, 130);
         g.drawString("3. " + highScores.printItem(2), (SCREEN_WIDTH - metrics.stringWidth("3. " + highScores.printItem(2))) / 2, 160);
         g.drawString("4. " + highScores.printItem(3), (SCREEN_WIDTH - metrics.stringWidth("4. " + highScores.printItem(3))) / 2, 190);
         g.drawString("5. " + highScores.printItem(4), (SCREEN_WIDTH - metrics.stringWidth("5. " + highScores.printItem(4))) / 2, 220);
-        g.drawString("Press 'r' to restart game", (SCREEN_WIDTH - metrics.stringWidth("Press 'r' to play again")) / 2, SCREEN_HEIGHT / 2 + 2 * g.getFont().getSize());
-        g.drawString("Press 'Esc' to exit", (SCREEN_WIDTH - metrics.stringWidth("Press 'Esc' to exit")) / 2, SCREEN_HEIGHT / 2 + 4 * g.getFont().getSize());
-        g.setColor(Color.red);
         g.drawString("Score: " + player.getScore(), (SCREEN_WIDTH - metrics.stringWidth("Score: " + player.getScore())) / 2, g.getFont().getSize());
-        addKeyPressedBinding("exit.pressed", KeyEvent.VK_ESCAPE, new ResetGame(ExitReset.EXIT));
+        g.drawString("Press 'r' to restart game", (SCREEN_WIDTH - metrics.stringWidth("Press 'r' to play again")) / 2, SCREEN_HEIGHT / 2 );//+ 2 * g.getFont().getSize());
+        g.drawString("Press 'Esc' to exit", (SCREEN_WIDTH - metrics.stringWidth("Press 'Esc' to exit")) / 2, SCREEN_HEIGHT / 2 + g.getFont().getSize());
+        g.setColor(Color.red);
+
         if(player.getScore() > highScores.getLast()){
             highScores.insert(player.getScore(), player.getName());
             player.setScore(0);
@@ -189,9 +193,13 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     private void checkCollisions() {
-        if (obstaclePosX == player.getPLAYERX()
+        if (player.getPlayerY() < UNIT_SIZE || player.getPlayerY() > SCREEN_HEIGHT - UNIT_SIZE)
+            running = false;
+        else if (obstaclePosX == player.getPLAYERX()
                 || obstaclePosX + UNIT_SIZE == player.getPLAYERX()
-                || obstaclePosX + 2 * UNIT_SIZE == player.getPLAYERX()) {
+                || obstaclePosX + 2 * UNIT_SIZE == player.getPLAYERX()
+                || obstaclePosX - UNIT_SIZE == player.getPLAYERX()
+                || obstaclePosX - 2 * UNIT_SIZE == player.getPLAYERX()) {
             if (player.getPlayerY() < obstaclePosY || player.getPlayerY() + PLAYER_SIZE > obstaclePosY + gap) running = false;
         }
     }
@@ -214,7 +222,7 @@ public class GamePanel extends JLabel implements ActionListener {
         private boolean exitGame;
         public ResetGame(GamePanel.ExitReset decision) {
             if (decision.equals(ExitReset.RESET)) reset = true;
-            else if (decision.equals(ExitReset.EXIT)) exitGame = true;
+            else exitGame = decision.equals(ExitReset.EXIT);
         }
         @Override
         public void actionPerformed(ActionEvent e) {
