@@ -5,7 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayDeque;
+import java.util.Objects;
 import java.util.Random;
+import java.util.Queue;
 
 
 public class GamePanel extends JLabel implements ActionListener {
@@ -18,7 +21,7 @@ public class GamePanel extends JLabel implements ActionListener {
 
     private final Player player;
     private final Score highScores;
-    private final Obstacle obstacle;
+    //private final Obstacle obstacle;
     protected static final int SCREEN_WIDTH = 500;
     protected static final int SCREEN_HEIGHT = 700;
     protected static final int UNIT_SIZE = 10;
@@ -26,7 +29,7 @@ public class GamePanel extends JLabel implements ActionListener {
     protected static int gap = 20 * UNIT_SIZE;
     private int level = 1;
     protected static final int MOVE_TIMER_DELAY = 100;
-    protected static final int FLY_TIMER_DELAY = 20;
+    protected static final int FLY_TIMER_DELAY = 15;
     protected static final int TIMER_DELAY = 30;
     private boolean running             = false;
     private boolean jump                = false;
@@ -34,15 +37,18 @@ public class GamePanel extends JLabel implements ActionListener {
     private boolean exit                = false;
     private boolean checkLevel          = false;
     private boolean dive                = false;
+    private boolean checkScore          = true;
     private final boolean isImage;
     private Timer gameTimer;
     private Timer jumpTimer;
     private Timer flyTimer;
     private final Random random;
+    private final Queue<Obstacle> obstacles;
 
     public GamePanel(String s, ImageIcon background, int center, Player player) {
         super(s,background,center);
-        this.obstacle = new Obstacle();
+        obstacles = new ArrayDeque<>();
+        //this.obstacle = new Obstacle();
         this.player = player;
         this.highScores = new Score();
         random = new Random();
@@ -83,6 +89,8 @@ public class GamePanel extends JLabel implements ActionListener {
                 checkLevel = false;
                 restart = false;
                 running = true;
+                checkScore = true;
+                obstacles.clear();
                 newObstacle();
             }
             repaint();
@@ -137,8 +145,10 @@ public class GamePanel extends JLabel implements ActionListener {
             else g.fillRect(player.getPLAYERX(), player.getPlayerY(), PLAYER_SIZE, PLAYER_SIZE);
             
             g.setColor(new Color(34,69,6));
-            g.fillRect(obstacle.getObstaclePosX(), 0, UNIT_SIZE * 2, obstacle.getObstaclePosY());
-            g.fillRect(obstacle.getObstaclePosX(), obstacle.getObstaclePosY()+ gap, UNIT_SIZE * 2, SCREEN_HEIGHT);
+            obstacles.forEach(obstacle -> {
+                g.fillRect(obstacle.getObstaclePosX(), 0, UNIT_SIZE * 2, obstacle.getObstaclePosY());
+                g.fillRect(obstacle.getObstaclePosX(), obstacle.getObstaclePosY()+ gap, UNIT_SIZE * 2, SCREEN_HEIGHT);
+            });
 
             g.setColor(Color.red);
             g.setFont(new Font("Showcard gothic", Font.BOLD, 25));
@@ -165,9 +175,10 @@ public class GamePanel extends JLabel implements ActionListener {
         g.drawString("Press 'Esc' to exit", (SCREEN_WIDTH - metrics.stringWidth("Press 'Esc' to exit")) / 2, SCREEN_HEIGHT / 2 + g.getFont().getSize());
         g.setColor(Color.red);
 
-        if(player.getScore() > highScores.getLast()){
+        if(checkScore && player.getScore() > highScores.getLast()){
             highScores.insert(player.getScore(), player.getName());
-            player.setScore(0);
+            checkScore = false;
+            //player.setScore(0);
         }
         if (exit) {
             jumpTimer.stop();
@@ -180,29 +191,42 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     private void newObstacle() {
+        Obstacle obstacle = new Obstacle();
         obstacle.setObstaclePosY(random.nextInt((SCREEN_HEIGHT - gap) / UNIT_SIZE) * UNIT_SIZE);
         obstacle.setObstaclePosX(SCREEN_WIDTH - 2 * UNIT_SIZE);
+        obstacles.add(obstacle);
     }
 
     private void obstacleMove() {
-        obstacle.decObstacleX(UNIT_SIZE);
-        if (obstacle.getObstaclePosX() == 0) {
-            newObstacle();
-            player.setScore(player.getScore()+1);
-            checkLevel = true;
+        obstacles.forEach(obstacle ->
+            obstacle.decObstacleX(UNIT_SIZE)
+        );
+        if(!obstacles.isEmpty()) {
+            if (obstacles.peek().getObstaclePosX() == ((SCREEN_WIDTH / 4)/UNIT_SIZE)*UNIT_SIZE) {
+                newObstacle();
+            } else if (Objects.requireNonNull(obstacles.peek()).getObstaclePosX() == 0) {
+                //newObstacle();
+                player.setScore(player.getScore() + 1);
+                checkLevel = true;
+                obstacles.remove();
+            }
         }
     }
 
     private void checkCollisions() {
+        int temp = Objects.requireNonNull(obstacles.peek()).getObstaclePosX();
         if (player.getPlayerY() < UNIT_SIZE || player.getPlayerY() > SCREEN_HEIGHT - UNIT_SIZE)
             running = false;
-        else if (obstacle.getObstaclePosX() == player.getPLAYERX()
-                || obstacle.getObstaclePosX() + UNIT_SIZE == player.getPLAYERX()
-                || obstacle.getObstaclePosX() + 2 * UNIT_SIZE == player.getPLAYERX()
-                || obstacle.getObstaclePosX() - UNIT_SIZE == player.getPLAYERX()
-                || obstacle.getObstaclePosX() - 2 * UNIT_SIZE == player.getPLAYERX()) {
-            if (player.getPlayerY() < obstacle.getObstaclePosY()
-                    || player.getPlayerY() + PLAYER_SIZE > obstacle.getObstaclePosY() + gap) running = false;
+        else if (!obstacles.isEmpty()) {
+            if (temp == player.getPLAYERX()
+                    || temp + UNIT_SIZE == player.getPLAYERX()
+                    || temp + 2 * UNIT_SIZE == player.getPLAYERX()
+                    || temp - UNIT_SIZE == player.getPLAYERX()
+                    || temp - 2 * UNIT_SIZE == player.getPLAYERX()) {
+                if (player.getPlayerY() < Objects.requireNonNull(obstacles.peek()).getObstaclePosY()
+                        || player.getPlayerY() + PLAYER_SIZE > Objects.requireNonNull(obstacles.peek()).getObstaclePosY() + gap)
+                    running = false;
+            }
         }
     }
 
