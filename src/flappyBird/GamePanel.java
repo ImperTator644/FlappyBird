@@ -29,7 +29,7 @@ public class GamePanel extends JLabel implements ActionListener {
     private int level = 1;
     protected static final int MOVE_TIMER_DELAY = 100;
     protected static final int FLY_TIMER_DELAY = 15;
-    protected static final int TIMER_DELAY = 30;
+    protected static final int TIMER_DELAY = 20;
     private boolean running             = false;
     private boolean jump                = false;
     private boolean restart             = false;
@@ -163,20 +163,19 @@ public class GamePanel extends JLabel implements ActionListener {
         g.setColor(Color.red);
         g.setFont(new Font("Showcard gothic",Font.BOLD, 30));
         FontMetrics metrics = getFontMetrics(g.getFont());
-        g.drawString("1. " + highScores.printItem(0), (SCREEN_WIDTH - metrics.stringWidth("1. " + highScores.printItem(0))) / 2, 100);
-        g.drawString("2. " + highScores.printItem(1), (SCREEN_WIDTH - metrics.stringWidth("2. " + highScores.printItem(1))) / 2, 130);
-        g.drawString("3. " + highScores.printItem(2), (SCREEN_WIDTH - metrics.stringWidth("3. " + highScores.printItem(2))) / 2, 160);
-        g.drawString("4. " + highScores.printItem(3), (SCREEN_WIDTH - metrics.stringWidth("4. " + highScores.printItem(3))) / 2, 190);
-        g.drawString("5. " + highScores.printItem(4), (SCREEN_WIDTH - metrics.stringWidth("5. " + highScores.printItem(4))) / 2, 220);
+
         g.drawString("Score: " + player.getScore(), (SCREEN_WIDTH - metrics.stringWidth("Score: " + player.getScore())) / 2, g.getFont().getSize());
-        g.drawString("Press 'r' to restart game", (SCREEN_WIDTH - metrics.stringWidth("Press 'r' to play again")) / 2, SCREEN_HEIGHT / 2 );//+ 2 * g.getFont().getSize());
+        for(int i = 0;i < 5; i++){
+            g.drawString((i + 1)+". " + highScores.printItem(i), (SCREEN_WIDTH - metrics.stringWidth((i + 1)+". " + highScores.printItem(i))) / 2, (i+3)*g.getFont().getSize());
+        }
+
+        g.drawString("Press 'r' to restart game", (SCREEN_WIDTH - metrics.stringWidth("Press 'r' to play again")) / 2, SCREEN_HEIGHT / 2 );
         g.drawString("Press 'Esc' to exit", (SCREEN_WIDTH - metrics.stringWidth("Press 'Esc' to exit")) / 2, SCREEN_HEIGHT / 2 + g.getFont().getSize());
         g.setColor(Color.red);
 
         if(checkScore && player.getScore() > highScores.getLast()){
             highScores.insert(player.getScore(), player.getName());
             checkScore = false;
-            //player.setScore(0);
         }
         if (exit) {
             jumpTimer.stop();
@@ -203,7 +202,6 @@ public class GamePanel extends JLabel implements ActionListener {
             if (obstacles.peek().getObstaclePosX() == ((SCREEN_WIDTH / 4)/UNIT_SIZE)*UNIT_SIZE) {
                 newObstacle();
             } else if (Objects.requireNonNull(obstacles.peek()).getObstaclePosX() == 0) {
-                //newObstacle();
                 player.setScore(player.getScore() + 1);
                 checkLevel = true;
                 obstacles.remove();
