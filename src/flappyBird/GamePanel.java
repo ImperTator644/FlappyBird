@@ -21,7 +21,6 @@ public class GamePanel extends JLabel implements ActionListener {
 
     private final Player player;
     private final Score highScores;
-    //private final Obstacle obstacle;
     protected static final int SCREEN_WIDTH = 500;
     protected static final int SCREEN_HEIGHT = 700;
     protected static final int UNIT_SIZE = 10;
@@ -48,7 +47,6 @@ public class GamePanel extends JLabel implements ActionListener {
     public GamePanel(String s, ImageIcon background, int center, Player player) {
         super(s,background,center);
         obstacles = new ArrayDeque<>();
-        //this.obstacle = new Obstacle();
         this.player = player;
         this.highScores = new Score();
         random = new Random();
