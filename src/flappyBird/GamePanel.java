@@ -29,7 +29,7 @@ public class GamePanel extends JLabel implements ActionListener {
     private int level = 1;
     protected static final int MOVE_TIMER_DELAY = 100;
     protected static final int FLY_TIMER_DELAY = 15;
-    protected static final int TIMER_DELAY = 30;
+    protected static final int TIMER_DELAY = 20;
     private boolean running             = false;
     private boolean jump                = false;
     private boolean restart             = false;
@@ -163,10 +163,12 @@ public class GamePanel extends JLabel implements ActionListener {
         g.setColor(Color.red);
         g.setFont(new Font("Showcard gothic",Font.BOLD, 30));
         FontMetrics metrics = getFontMetrics(g.getFont());
+
         g.drawString("Score: " + player.getScore(), (SCREEN_WIDTH - metrics.stringWidth("Score: " + player.getScore())) / 2, g.getFont().getSize());
         for(int i = 0;i < 5; i++){
             g.drawString((i + 1)+". " + highScores.printItem(i), (SCREEN_WIDTH - metrics.stringWidth((i + 1)+". " + highScores.printItem(i))) / 2, (i+3)*g.getFont().getSize());
         }
+
         g.drawString("Press 'r' to restart game", (SCREEN_WIDTH - metrics.stringWidth("Press 'r' to play again")) / 2, SCREEN_HEIGHT / 2 );
         g.drawString("Press 'Esc' to exit", (SCREEN_WIDTH - metrics.stringWidth("Press 'Esc' to exit")) / 2, SCREEN_HEIGHT / 2 + g.getFont().getSize());
         g.setColor(Color.red);
