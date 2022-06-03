@@ -1,44 +1,25 @@
 package flappyBird;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 
-public class Player {
+public abstract class Player {
     private final String name;
-    private Image bird,birdFly,birdDive;
     private int playerY = GamePanel.SCREEN_HEIGHT / 2;
     private int score = 0;
+
+    public abstract boolean loadImage();
 
     public Player(String name){
         this.name = name;
     }
 
-    public boolean loadImage(){
-        boolean temp = false;
-        try{
-            bird = ImageIO.read(new File("src/images/bird.png"));
-            birdFly = ImageIO.read(new File("src/images/birdFly.png"));
-            birdDive = ImageIO.read(new File("src/images/birdDive.png"));
-            temp = true;
-        }catch (IOException e){
-            System.out.println(e.getMessage());
-        }
-        return temp;
-    }
+    public abstract Image getBird();
 
-    public Image getBird() {
-        return bird;
-    }
+    public abstract Image getBirdFly();
 
-    public Image getBirdFly() {
-        return birdFly;
-    }
+    public abstract Image getBirdDive();
 
-    public Image getBirdDive() {
-        return birdDive;
-    }
+    public abstract String getColor();
 
     public String getName() {
         return name;
