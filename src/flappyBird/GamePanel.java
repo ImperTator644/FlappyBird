@@ -28,8 +28,8 @@ public class GamePanel extends JLabel implements ActionListener {
     protected static int gap = 20 * UNIT_SIZE;
     private int level = 1;
     protected static final int MOVE_TIMER_DELAY = 100;
-    protected static final int FLY_TIMER_DELAY = 15;
-    protected static final int TIMER_DELAY = 20;
+    protected static final int FLY_TIMER_DELAY = 10;
+    protected static final int TIMER_DELAY = 30;
     private boolean running             = false;
     private boolean jump                = false;
     private boolean restart             = false;
