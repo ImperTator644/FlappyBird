@@ -4,13 +4,10 @@ import flappyBird.Info;
 import flappyBird.Player;
 
 import javax.swing.*;
-<<<<<<< HEAD
 import java.io.EOFException;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-=======
->>>>>>> 310118ca63818d2b72ba147b91878eeb625045c7
 
 public class Main {
     private static Info info;
