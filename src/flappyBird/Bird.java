@@ -4,8 +4,9 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 
-public class Bird extends Player{
+public class Bird extends Player {
     private String color = "";
     private Image bird;
     private Image birdFly;
@@ -20,12 +21,6 @@ public class Bird extends Player{
         boolean temp = false;
             try {
                 switch (color) {
-                    case "yellow" -> {
-                        bird = ImageIO.read(new File("src/images/birdYellow.png"));
-                        birdFly = ImageIO.read(new File("src/images/birdFlyYellow.png"));
-                        birdDive = ImageIO.read(new File("src/images/birdDiveYellow.png"));
-                        temp = true;
-                    }
                     case "red" -> {
                         bird = ImageIO.read(new File("src/images/birdRed.png"));
                         birdFly = ImageIO.read(new File("src/images/birdFlyRed.png"));
@@ -36,6 +31,12 @@ public class Bird extends Player{
                         bird = ImageIO.read(new File("src/images/birdGreen.png"));
                         birdFly = ImageIO.read(new File("src/images/birdFlyGreen.png"));
                         birdDive = ImageIO.read(new File("src/images/birdDiveGreen.png"));
+                        temp = true;
+                    }
+                    default -> {
+                        bird = ImageIO.read(new File("src/images/birdYellow.png"));
+                        birdFly = ImageIO.read(new File("src/images/birdFlyYellow.png"));
+                        birdDive = ImageIO.read(new File("src/images/birdDiveYellow.png"));
                         temp = true;
                     }
                 }

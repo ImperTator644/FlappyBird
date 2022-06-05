@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.*;
 import java.util.ArrayDeque;
 import java.util.Objects;
 import java.util.Random;
@@ -27,7 +28,7 @@ public class GamePanel extends JLabel implements ActionListener {
     protected static final int PLAYER_SIZE = 3 * UNIT_SIZE;
     protected static int gap = 20 * UNIT_SIZE;
     private int level = 1;
-    protected static final int MOVE_TIMER_DELAY = 100;
+    protected static final int MOVE_TIMER_DELAY = 50;
     protected static final int FLY_TIMER_DELAY = 10;
     protected static final int TIMER_DELAY = 30;
     private boolean running             = false;
@@ -43,15 +44,28 @@ public class GamePanel extends JLabel implements ActionListener {
     private Timer flyTimer;
     private final Random random;
     private final Queue<Obstacle> obstacles;
+    private static Info info;
+    private ObjectOutputStream output;
 
-    public GamePanel(String s, ImageIcon background, int center, Player player) {
+    public GamePanel(String s, ImageIcon background, int center, Player player, Info info) {
         super(s,background,center);
         obstacles = new ArrayDeque<>();
         this.player = player;
+        this.info = info;
         this.highScores = new Score();
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
         isImage = player.loadImage();
+    }
+
+    private void saveInfo(){
+        try{
+            output = new ObjectOutputStream(new FileOutputStream("src/info.dat"));
+            output.writeObject(info);
+            output.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void initGame() {
@@ -173,6 +187,7 @@ public class GamePanel extends JLabel implements ActionListener {
         g.drawString("Press 'Esc' to exit", (SCREEN_WIDTH - metrics.stringWidth("Press 'Esc' to exit")) / 2, SCREEN_HEIGHT / 2 + g.getFont().getSize());
         g.setColor(Color.red);
 
+        info.updatePlayersHighScore(player.getName(),player.getScore());
         if(checkScore && player.getScore() > highScores.getLast()){
             highScores.insert(player.getScore(), player.getName());
             checkScore = false;
@@ -183,6 +198,8 @@ public class GamePanel extends JLabel implements ActionListener {
             flyTimer.stop();
             System.out.println(highScores);
             highScores.saveScores();
+            info.updatePlayerActivity(player.getName());
+            saveInfo();
             System.exit(0);
         }
     }
