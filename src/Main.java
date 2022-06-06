@@ -24,7 +24,7 @@ public class Main {
         JOptionPane.showMessageDialog(null, info.displayPlayerInfo(playerName));
         String color = JOptionPane.showInputDialog("Enter color {yellow, red, green}: ");
         Player player = new Bird(playerName, color);
-        var frame = new GameFrame(player, info);
+        var frame = new GameFrame(player, info,color);
         frame.startGame();
     }
 

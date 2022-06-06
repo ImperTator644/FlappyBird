@@ -10,9 +10,10 @@ public class GameFrame extends JFrame {
      * @param player stan gracza
      * @param info stan gry
      */
-    public GameFrame(Player player, Info info) {
+    public GameFrame(Player player, Info info,String color) {
         ImageIcon background = new ImageIcon("src/images/background.png");
         ImageIcon icon = new ImageIcon("src/images/birdFlyYellow.png");
+        if(color.equals("beer")) background = new ImageIcon("src/images/backgroundTwo.png");
         panel = new GamePanel("", background, JLabel.CENTER, player, info);
         this.add(panel);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);

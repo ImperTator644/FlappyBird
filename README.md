@@ -5,4 +5,6 @@ It's a project for a university "Object Oriented Programming" subject on Cracow 
 Authors
 LK
 KB
+KF
+inż. Bombelek
 21i
