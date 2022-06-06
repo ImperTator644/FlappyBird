@@ -38,14 +38,14 @@ public class GamePanel extends JLabel implements ActionListener {
     private boolean checkLevel          = false;
     private boolean dive                = false;
     private boolean checkScore          = true;
+    private boolean checkPlayer          = true;
     private final boolean isImage;
     private Timer gameTimer;
     private Timer jumpTimer;
     private Timer flyTimer;
     private final Random random;
     private final Queue<Obstacle> obstacles;
-    private static Info info;
-    private ObjectOutputStream output;
+    private final Info info;
 
     public GamePanel(String s, ImageIcon background, int center, Player player, Info info) {
         super(s,background,center);
@@ -60,7 +60,7 @@ public class GamePanel extends JLabel implements ActionListener {
 
     private void saveInfo(){
         try{
-            output = new ObjectOutputStream(new FileOutputStream("src/info.dat"));
+            ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream("src/info.dat"));
             output.writeObject(info);
             output.close();
         } catch (IOException e) {
@@ -102,6 +102,7 @@ public class GamePanel extends JLabel implements ActionListener {
                 restart = false;
                 running = true;
                 checkScore = true;
+                checkPlayer = true;
                 obstacles.clear();
                 newObstacle();
             }
@@ -183,15 +184,19 @@ public class GamePanel extends JLabel implements ActionListener {
             g.drawString((i + 1)+". " + highScores.printItem(i), (SCREEN_WIDTH - metrics.stringWidth((i + 1)+". " + highScores.printItem(i))) / 2, (i+3)*g.getFont().getSize());
         }
 
-        g.drawString("Press 'r' to restart game", (SCREEN_WIDTH - metrics.stringWidth("Press 'r' to play again")) / 2, SCREEN_HEIGHT / 2 );
-        g.drawString("Press 'Esc' to exit", (SCREEN_WIDTH - metrics.stringWidth("Press 'Esc' to exit")) / 2, SCREEN_HEIGHT / 2 + g.getFont().getSize());
+        g.drawString("Press 'r' to restart game", (SCREEN_WIDTH - metrics.stringWidth("Press 'r' to play again")) / 2, (SCREEN_HEIGHT / 3) * 2 );
+        g.drawString("Press 'Esc' to exit", (SCREEN_WIDTH - metrics.stringWidth("Press 'Esc' to exit")) / 2, (SCREEN_HEIGHT / 3) * 2 + g.getFont().getSize());
         g.setColor(Color.red);
 
-        info.updatePlayersHighScore(player.getName(),player.getScore());
+        if(checkPlayer && info.updatePlayersHighScore(player.getName(),player.getScore())){
+            checkPlayer = false;
+        }
         if(checkScore && player.getScore() > highScores.getLast()){
             highScores.insert(player.getScore(), player.getName());
             checkScore = false;
         }
+        if(!checkScore) g.drawString("NEW HIGHSCORE !!! ", (SCREEN_WIDTH - metrics.stringWidth("NEW HIGHSCORE !!! ")) / 2, SCREEN_HEIGHT / 2 );
+        if(!checkPlayer)g.drawString("NEW PLAYER HIGHSCORE !!! ", (SCREEN_WIDTH - metrics.stringWidth("NEW PLAYER HIGHSCORE !!! ")) / 2, SCREEN_HEIGHT / 2 + g.getFont().getSize());
         if (exit) {
             jumpTimer.stop();
             gameTimer.stop();
