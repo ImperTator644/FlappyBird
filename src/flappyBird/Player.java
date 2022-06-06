@@ -3,7 +3,7 @@ package flappyBird;
 import java.awt.*;
 import java.io.Serializable;
 
-public abstract class Player implements Serializable {
+public abstract class Player {
     private final String name;
     private int playerY = GamePanel.SCREEN_HEIGHT / 2;
     private int score = 0;

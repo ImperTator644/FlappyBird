@@ -19,9 +19,12 @@ public class Info implements Serializable {
         playerLastActivity.put(player, LocalDateTime.now());
     }
 
-    public void updatePlayersHighScore(String player, int score) {
-        if (playerHighScore.get(player) < score)
+    public boolean updatePlayersHighScore(String player, int score) {
+        if (playerHighScore.get(player) < score) {
             playerHighScore.put(player, score);
+            return true;
+        }
+        return false;
     }
 
     public void updatePlayerActivity(String player){
