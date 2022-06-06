@@ -3,7 +3,6 @@ package flappyBird;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.HashMap;
 
 public class Info implements Serializable {
@@ -20,9 +19,12 @@ public class Info implements Serializable {
         playerLastActivity.put(player, LocalDateTime.now());
     }
 
-    public void updatePlayersHighScore(String player, int score) {
-        if (playerHighScore.get(player) < score)
+    public boolean updatePlayersHighScore(String player, int score) {
+        if (playerHighScore.get(player) < score) {
             playerHighScore.put(player, score);
+            return true;
+        }
+        return false;
     }
 
     public void updatePlayerActivity(String player){
