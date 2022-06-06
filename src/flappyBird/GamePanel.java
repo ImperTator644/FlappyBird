@@ -11,7 +11,9 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Queue;
 
-
+/**
+ * operate game state
+ */
 public class GamePanel extends JLabel implements ActionListener {
 
     protected enum Movement {NONE, UP, DOWN}
@@ -47,6 +49,14 @@ public class GamePanel extends JLabel implements ActionListener {
     private final Queue<Obstacle> obstacles;
     private final Info info;
 
+    /**
+     * przechowywuje wszystkie informacje o grze
+     * @param s
+     * @param background
+     * @param center
+     * @param player
+     * @param info
+     */
     public GamePanel(String s, ImageIcon background, int center, Player player, Info info) {
         super(s,background,center);
         obstacles = new ArrayDeque<>();
@@ -68,6 +78,9 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * metoda przygotowujaca wykorzystywane przyciski
+     */
     public void initGame() {
         addKeyPressedBinding("up.pressed", KeyEvent.VK_W, new MoveUDAction(GamePanel.Movement.UP));
         addKeyReleasedBinding("up.released", KeyEvent.VK_W, new MoveUDAction(GamePanel.Movement.NONE));
@@ -124,16 +137,34 @@ public class GamePanel extends JLabel implements ActionListener {
         flyTimer.start();
     }
 
+    /**
+     * metoda okreslajaca przyciskany przycisk
+     * @param name nazwa klawisza
+     * @param keyCode kod klawisza
+     * @param action akcja po wcisnieciu
+     */
     protected void addKeyPressedBinding(String name, int keyCode, Action action) {
         KeyStroke ks = KeyStroke.getKeyStroke(keyCode, 0, false);
         addKeyBinding(name, ks, action);
     }
 
+    /**
+     * metoda okreslajaca puszczenie przycisku
+     * @param name nazwa klawisza
+     * @param keyCode kod klawisza
+     * @param action akcja po puszczeniu
+     */
     protected void addKeyReleasedBinding(String name, int keyCode, Action action) {
         KeyStroke ks = KeyStroke.getKeyStroke(keyCode, 0, true);
         addKeyBinding(name, ks, action);
     }
 
+    /**
+     * metoda tworzaca klawisz akcji
+     * @param name nazwa klawisza
+     * @param ks kod klawisza
+     * @param action akcja za ktora jest odpowiedzialny klawisz
+     */
     protected void addKeyBinding(String name, KeyStroke ks, Action action) {
         InputMap im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = getActionMap();
@@ -142,11 +173,19 @@ public class GamePanel extends JLabel implements ActionListener {
         am.put(name, action);
     }
 
+    /**
+     * malowanie grafiki
+     * @param g wybrana grafika
+     */
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
     }
 
+    /**
+     * rysowanie grafiki
+     * @param g wybrana grafika
+     */
     private void draw(Graphics g) {
         if (running) {
             g.setColor(Color.red);
@@ -174,6 +213,10 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * metoda okreslajaca koniec rozgrywki
+     * @param g grafika koncowa
+     */
     public void gameOver(Graphics g) {
         g.setColor(Color.red);
         g.setFont(new Font("Showcard gothic",Font.BOLD, 30));
@@ -209,6 +252,9 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * method which creates obstacles
+     */
     private void newObstacle() {
         Obstacle obstacle = new Obstacle();
         obstacle.setObstaclePosY(random.nextInt((SCREEN_HEIGHT - gap) / UNIT_SIZE) * UNIT_SIZE);
@@ -216,6 +262,9 @@ public class GamePanel extends JLabel implements ActionListener {
         obstacles.add(obstacle);
     }
 
+    /**
+     * methods stands for moving obstacles
+     */
     private void obstacleMove() {
         obstacles.forEach(obstacle ->
             obstacle.decObstacleX(UNIT_SIZE)
@@ -231,6 +280,9 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * check collision between player and obstacle
+     */
     private void checkCollisions() {
         int temp = Objects.requireNonNull(obstacles.peek()).getObstaclePosX();
         if (player.getPlayerY() < UNIT_SIZE || player.getPlayerY() > SCREEN_HEIGHT - UNIT_SIZE)
@@ -248,6 +300,10 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * akcja odbywana na klatce
+     * @param e action event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         jump = movement == Movement.UP;
@@ -262,6 +318,9 @@ public class GamePanel extends JLabel implements ActionListener {
         repaint();
     }
 
+    /**
+     * class stands for reset game state
+     */
     protected class ResetGame extends AbstractAction {
         private boolean reset;
         private boolean exitGame;
@@ -276,6 +335,9 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * stands for moving player
+     */
     protected class MoveUDAction extends AbstractAction {
         private final GamePanel.Movement UDmovement;
 

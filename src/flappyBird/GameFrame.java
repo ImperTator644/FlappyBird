@@ -5,6 +5,11 @@ import javax.swing.*;
 public class GameFrame extends JFrame {
     private final GamePanel panel;
 
+    /**
+     * klasa odpowiadajaca za jedna klatke w grze
+     * @param player stan gracza
+     * @param info stan gry
+     */
     public GameFrame(Player player, Info info) {
         ImageIcon background = new ImageIcon("src/images/background.png");
         ImageIcon icon = new ImageIcon("src/images/birdFlyYellow.png");

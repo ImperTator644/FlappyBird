@@ -6,6 +6,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 
+/**
+ * stands for player graphics
+ */
 public class Bird extends Player {
     private String color = "";
     private Image bird;
@@ -17,6 +20,10 @@ public class Bird extends Player {
         this.color = color;
     }
 
+    /**
+     * metoda odpowiadajaca za zaladowanie wybranych grafik gracza
+     * @return w przypadku powodzenia zwraca true // bool value okreslajaca powodzenie
+     */
     public boolean loadImage(){
         boolean temp = false;
             try {

@@ -3,6 +3,9 @@ package flappyBird;
 import java.awt.*;
 import java.io.Serializable;
 
+/**
+ * contains informations about the player (name, score, bird type, position)
+ */
 public abstract class Player {
     private final String name;
     private int playerY = GamePanel.SCREEN_HEIGHT / 2;
