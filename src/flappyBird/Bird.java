@@ -21,8 +21,8 @@ public class Bird extends Player {
     }
 
     /**
-     * metoda odpowiadajaca za zaladowanie wybranych grafik gracza
-     * @return w przypadku powodzenia zwraca true // bool value okreslajaca powodzenie
+     * load chosen players images
+     * @return bool value determines success
      */
     public boolean loadImage(){
         boolean temp = false;

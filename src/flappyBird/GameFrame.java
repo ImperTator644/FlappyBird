@@ -6,9 +6,10 @@ public class GameFrame extends JFrame {
     private final GamePanel panel;
 
     /**
-     * klasa odpowiadajaca za jedna klatke w grze
-     * @param player stan gracza
-     * @param info stan gry
+     * responsible for game frame
+     * @param player player state
+     * @param info game state
+     * @param color player color
      */
     public GameFrame(Player player, Info info,String color) {
         ImageIcon background = new ImageIcon("src/images/background.png");

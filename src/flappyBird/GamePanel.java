@@ -12,7 +12,7 @@ import java.util.Random;
 import java.util.Queue;
 
 /**
- * operate game state
+ * operates game state
  */
 public class GamePanel extends JLabel implements ActionListener {
 
@@ -50,7 +50,7 @@ public class GamePanel extends JLabel implements ActionListener {
     private final Info info;
 
     /**
-     * przechowywuje wszystkie informacje o grze
+     * stores all information about the game
      * @param s
      * @param background
      * @param center
@@ -79,7 +79,7 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * metoda przygotowujaca wykorzystywane przyciski
+     * determines button action
      */
     public void initGame() {
         addKeyPressedBinding("up.pressed", KeyEvent.VK_W, new MoveUDAction(GamePanel.Movement.UP));
@@ -138,10 +138,10 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * metoda okreslajaca przyciskany przycisk
-     * @param name nazwa klawisza
-     * @param keyCode kod klawisza
-     * @param action akcja po wcisnieciu
+     * define which button is used
+     * @param name button name
+     * @param keyCode button key
+     * @param action action after button press
      */
     protected void addKeyPressedBinding(String name, int keyCode, Action action) {
         KeyStroke ks = KeyStroke.getKeyStroke(keyCode, 0, false);
@@ -150,9 +150,9 @@ public class GamePanel extends JLabel implements ActionListener {
 
     /**
      * metoda okreslajaca puszczenie przycisku
-     * @param name nazwa klawisza
-     * @param keyCode kod klawisza
-     * @param action akcja po puszczeniu
+     * @param name button name
+     * @param keyCode button key
+     * @param action action after button release
      */
     protected void addKeyReleasedBinding(String name, int keyCode, Action action) {
         KeyStroke ks = KeyStroke.getKeyStroke(keyCode, 0, true);
@@ -160,10 +160,10 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * metoda tworzaca klawisz akcji
-     * @param name nazwa klawisza
-     * @param ks kod klawisza
-     * @param action akcja za ktora jest odpowiedzialny klawisz
+     * create action button
+     * @param name button name
+     * @param ks button key
+     * @param action action for which the button is responsible
      */
     protected void addKeyBinding(String name, KeyStroke ks, Action action) {
         InputMap im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
@@ -173,19 +173,11 @@ public class GamePanel extends JLabel implements ActionListener {
         am.put(name, action);
     }
 
-    /**
-     * malowanie grafiki
-     * @param g wybrana grafika
-     */
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
     }
 
-    /**
-     * rysowanie grafiki
-     * @param g wybrana grafika
-     */
     private void draw(Graphics g) {
         if (running) {
             g.setColor(Color.red);
@@ -214,8 +206,8 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * metoda okreslajaca koniec rozgrywki
-     * @param g grafika koncowa
+     * determines game over
+     * @param g game over graphics
      */
     public void gameOver(Graphics g) {
         g.setColor(Color.red);
@@ -281,7 +273,7 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * check collision between player and obstacle
+     * check collision between player and obstacles
      */
     private void checkCollisions() {
         int temp = Objects.requireNonNull(obstacles.peek()).getObstaclePosX();
@@ -301,7 +293,7 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * akcja odbywana na klatce
+     * responsible for frame action, decreasing level by changing obstacles size
      * @param e action event
      */
     @Override
@@ -319,7 +311,7 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * class stands for reset game state
+     * stands for reset game state
      */
     protected class ResetGame extends AbstractAction {
         private boolean reset;

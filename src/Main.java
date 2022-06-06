@@ -13,8 +13,8 @@ public class Main {
     private static Info info;
 
     /**
-     * Glowna metoda odpowiadajaca za uruchomienie programu
-     * @param args pobiera od uzytkownika nazwe, kolor gracza
+     * responsible for running the program
+     * @param args get name and player's color
      */
 
     public static void main(String[] args) {
@@ -29,7 +29,7 @@ public class Main {
     }
 
     /**
-     * laduje informacje na temat gracza (ostatnia aktywnosc, highscore)
+     * load information about player, his last activity and highscore
      */
     private static void loadInfo() {
         try {
@@ -43,8 +43,8 @@ public class Main {
     }
 
     /**
-     * sprawdza czy istnieje taki gracz, jak nie to go dodaje
-     * @param player parametr odpowiadajacy za nazwe gracza // responsible for player name
+     * add player if not exists
+     * @param player player name
      */
     private static void checkPlayer(String player){
         if(!info.checkIfPlayerExists(player))
