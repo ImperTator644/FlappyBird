@@ -33,6 +33,12 @@ public class Bird extends Player {
                         birdDive = ImageIO.read(new File("src/images/birdDiveGreen.png"));
                         temp = true;
                     }
+                    case "beer" ->{
+                        bird = ImageIO.read(new File("src/images/birdOne.png"));
+                        birdFly = ImageIO.read(new File("src/images/birdThree.png"));
+                        birdDive = ImageIO.read(new File("src/images/birdTwo.png"));
+                        temp = true;
+                    }
                     default -> {
                         bird = ImageIO.read(new File("src/images/birdYellow.png"));
                         birdFly = ImageIO.read(new File("src/images/birdFlyYellow.png"));
