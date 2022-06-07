@@ -35,6 +35,7 @@ public class Main {
         try {
             ObjectInputStream input = new ObjectInputStream(new FileInputStream("src/info.dat"));
             info = (Info) input.readObject();
+            input.close();
         } catch (EOFException eo) {
             info = new Info();
         } catch (IOException | ClassNotFoundException e) {
