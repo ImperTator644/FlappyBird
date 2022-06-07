@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 
+/**
+ * operate with score board - inserting, saving
+ */
 public class Score {
     private final Element[] items = new Element[5];
 

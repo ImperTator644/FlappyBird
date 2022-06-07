@@ -11,7 +11,9 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Queue;
 
-
+/**
+ * operates game state
+ */
 public class GamePanel extends JLabel implements ActionListener {
 
     protected enum Movement {NONE, UP, DOWN}
@@ -47,6 +49,14 @@ public class GamePanel extends JLabel implements ActionListener {
     private final Queue<Obstacle> obstacles;
     private final Info info;
 
+    /**
+     * stores all information about the game
+     * @param s
+     * @param background
+     * @param center
+     * @param player
+     * @param info
+     */
     public GamePanel(String s, ImageIcon background, int center, Player player, Info info) {
         super(s,background,center);
         obstacles = new ArrayDeque<>();
@@ -68,6 +78,9 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * determines button action
+     */
     public void initGame() {
         addKeyPressedBinding("up.pressed", KeyEvent.VK_W, new MoveUDAction(GamePanel.Movement.UP));
         addKeyReleasedBinding("up.released", KeyEvent.VK_W, new MoveUDAction(GamePanel.Movement.NONE));
@@ -124,16 +137,34 @@ public class GamePanel extends JLabel implements ActionListener {
         flyTimer.start();
     }
 
+    /**
+     * define which button is used
+     * @param name button name
+     * @param keyCode button key
+     * @param action action after button press
+     */
     protected void addKeyPressedBinding(String name, int keyCode, Action action) {
         KeyStroke ks = KeyStroke.getKeyStroke(keyCode, 0, false);
         addKeyBinding(name, ks, action);
     }
 
+    /**
+     * metoda okreslajaca puszczenie przycisku
+     * @param name button name
+     * @param keyCode button key
+     * @param action action after button release
+     */
     protected void addKeyReleasedBinding(String name, int keyCode, Action action) {
         KeyStroke ks = KeyStroke.getKeyStroke(keyCode, 0, true);
         addKeyBinding(name, ks, action);
     }
 
+    /**
+     * create action button
+     * @param name button name
+     * @param ks button key
+     * @param action action for which the button is responsible
+     */
     protected void addKeyBinding(String name, KeyStroke ks, Action action) {
         InputMap im = getInputMap(WHEN_IN_FOCUSED_WINDOW);
         ActionMap am = getActionMap();
@@ -174,6 +205,10 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * determines game over
+     * @param g game over graphics
+     */
     public void gameOver(Graphics g) {
         g.setColor(Color.red);
         g.setFont(new Font("Showcard gothic",Font.BOLD, 30));
@@ -209,6 +244,9 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * method which creates obstacles
+     */
     private void newObstacle() {
         Obstacle obstacle = new Obstacle();
         obstacle.setObstaclePosY(random.nextInt((SCREEN_HEIGHT - gap) / UNIT_SIZE) * UNIT_SIZE);
@@ -216,6 +254,9 @@ public class GamePanel extends JLabel implements ActionListener {
         obstacles.add(obstacle);
     }
 
+    /**
+     * methods stands for moving obstacles
+     */
     private void obstacleMove() {
         obstacles.forEach(obstacle ->
             obstacle.decObstacleX(UNIT_SIZE)
@@ -231,6 +272,9 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * check collision between player and obstacles
+     */
     private void checkCollisions() {
         int temp = Objects.requireNonNull(obstacles.peek()).getObstaclePosX();
         if (player.getPlayerY() < UNIT_SIZE || player.getPlayerY() > SCREEN_HEIGHT - UNIT_SIZE)
@@ -248,6 +292,10 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * responsible for frame action, decreasing level by changing obstacles size
+     * @param e action event
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         jump = movement == Movement.UP;
@@ -262,6 +310,9 @@ public class GamePanel extends JLabel implements ActionListener {
         repaint();
     }
 
+    /**
+     * stands for reset game state
+     */
     protected class ResetGame extends AbstractAction {
         private boolean reset;
         private boolean exitGame;
@@ -276,6 +327,9 @@ public class GamePanel extends JLabel implements ActionListener {
         }
     }
 
+    /**
+     * stands for moving player
+     */
     protected class MoveUDAction extends AbstractAction {
         private final GamePanel.Movement UDmovement;
 
