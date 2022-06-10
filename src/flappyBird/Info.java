@@ -5,6 +5,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 
+/**
+ * serialization - stands for saving player, highscore and his last activities
+ */
 public class Info implements Serializable {
     private final HashMap<String, Integer> playerHighScore;
     private final HashMap<String, LocalDateTime> playerLastActivity;

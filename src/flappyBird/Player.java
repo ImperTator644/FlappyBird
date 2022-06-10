@@ -1,8 +1,10 @@
 package flappyBird;
 
 import java.awt.*;
-import java.io.Serializable;
 
+/**
+ * contains informations about the player (name, score, bird type, position)
+ */
 public abstract class Player {
     private final String name;
     private int playerY = GamePanel.SCREEN_HEIGHT / 2;
@@ -20,7 +22,6 @@ public abstract class Player {
 
     public abstract Image getBirdDive();
 
-    public abstract String getColor();
 
     public String getName() {
         return name;
@@ -43,8 +44,7 @@ public abstract class Player {
     }
 
     public int getPLAYERX() {
-        int PLAYERX = 100;
-        return PLAYERX;
+        return 100;
     }
 
     public void setScore(int score) {

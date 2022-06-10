@@ -1,5 +1,8 @@
 package flappyBird;
 
+/**
+ * defines obstacle state (position, gap size)
+ */
 public class Obstacle {
     private int obstaclePosX;
     private int obstaclePosY;

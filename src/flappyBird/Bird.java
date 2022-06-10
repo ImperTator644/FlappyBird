@@ -4,10 +4,12 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 
+/**
+ * stands for player graphics
+ */
 public class Bird extends Player {
-    private String color = "";
+    private final String color;
     private Image bird;
     private Image birdFly;
     private Image birdDive;
@@ -17,6 +19,10 @@ public class Bird extends Player {
         this.color = color;
     }
 
+    /**
+     * load chosen players images
+     * @return bool value determines success
+     */
     public boolean loadImage(){
         boolean temp = false;
             try {

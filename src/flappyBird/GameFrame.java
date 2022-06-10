@@ -5,6 +5,12 @@ import javax.swing.*;
 public class GameFrame extends JFrame {
     private final GamePanel panel;
 
+    /**
+     * responsible for game frame
+     * @param player player state
+     * @param info game state
+     * @param color player color
+     */
     public GameFrame(Player player, Info info,String color) {
         ImageIcon background = new ImageIcon("src/images/background.png");
         ImageIcon icon = new ImageIcon("src/images/birdFlyYellow.png");
