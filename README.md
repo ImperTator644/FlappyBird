@@ -6,5 +6,4 @@ Authors
 LK
 KB
 KF
-inż. Bombelek
 21i
