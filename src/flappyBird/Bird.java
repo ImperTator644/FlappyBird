@@ -6,22 +6,32 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * stands for player graphics
+ * Contains bird images
+ *  @author Blicharz, Kaczynski, Filiciak
+ *  @version 1.0
  */
 public class Bird extends Player {
+    /**
+     * Color of the bird
+     */
     private final String color;
     private Image bird;
     private Image birdFly;
     private Image birdDive;
 
+    /**
+     * Initializes player's name and color of the bird
+     * @param name name for the player
+     * @param color String, which defines bird color
+     */
     public Bird(String name, String color) {
         super(name);
         this.color = color;
     }
 
     /**
-     * load chosen players images
-     * @return bool value determines success
+     * Loads bird images.
+     * @return true, if image has been loaded successfully, false if image hasn't been found or loaded incorrectly
      */
     public boolean loadImage(){
         boolean temp = false;
@@ -58,19 +68,27 @@ public class Bird extends Player {
         return temp;
     }
 
+    /**
+     *
+     * @return bird basic image
+     */
     public Image getBird() {
         return bird;
     }
 
+    /**
+     *
+     * @return bird flying up image
+     */
     public Image getBirdFly() {
         return birdFly;
     }
 
+    /**
+     *
+     * @return bird diving image
+     */
     public Image getBirdDive() {
         return birdDive;
-    }
-
-    public String getColor() {
-        return color;
     }
 }

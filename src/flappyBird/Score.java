@@ -8,11 +8,20 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 /**
- * operate with score board - inserting, saving
+ * Operates with score board - inserting and saving.
+ * @author Kaczynski
+ * @version 1.2.2
  */
 public class Score {
+    /**
+     * Array containing five objects of class Element
+     */
     private final Element[] items = new Element[5];
 
+    /**
+     * Reads data from HighScore.txt
+     * Inserts data to items array.
+     */
     public Score(){
         for(int i=0; i< items.length; i++) items[i] = new Element(0, "---");
         try (Scanner scanner = new Scanner(new File("src/HighScore.txt"))){
@@ -28,10 +37,19 @@ public class Score {
         }
     }
 
+    /**
+     *
+     * @return score from the bottom of the score board
+     */
     public int getLast(){
         return items[4].score;
     }
 
+    /**
+     * Prints content of index i from items array.
+     * @param i index of array
+     * @return text representing "name - score"
+     */
     public String printItem(int i){
         return items[i].name +" - "+ items[i].score;
     }
@@ -50,6 +68,9 @@ public class Score {
         }
     }
 
+    /**
+     * Saves data from items array to HighScore.txt
+     */
     public void saveScores(){
         try(FileWriter fw = new FileWriter("src/HighScore.txt", false)){
             for(Element i:items){
@@ -60,27 +81,36 @@ public class Score {
         }
     }
 
+    /**
+     *
+     * @return text representation of items array
+     */
     @Override public String toString(){
         return Arrays.toString(items);
     }
 
+    /**
+     * Inner class.
+     * Contains player's name and score
+     */
     private static class Element{
         private int score;
         private String name;
 
+        /**
+         * Initializes score and name
+         * @param score player score
+         * @param name player name
+         */
         public Element(int score, String name) {
             this.score = score;
             this.name = name;
         }
 
-        public int getScore() {
-            return score;
-        }
-
-        public String getName() {
-            return name;
-        }
-
+        /**
+         *
+         * @return text representation of the element
+         */
         @Override
         public String toString(){
             return score + " " + name + "\n";

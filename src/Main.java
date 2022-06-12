@@ -9,14 +9,18 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
+/**
+ * Main class of the game
+ * @author Blicharz, Kaczynski, Filiciak
+ * @version 1.11
+ */
 public class Main {
     private static Info info;
 
     /**
-     * responsible for running the program
-     * @param args get name and player's color
+     * Responsible for getting player's information and bird color
+     * Creates frame and starts the game.
      */
-
     public static void main(String[] args) {
         loadInfo();
         String playerName = JOptionPane.showInputDialog("Enter name: ");
@@ -24,12 +28,15 @@ public class Main {
         JOptionPane.showMessageDialog(null, info.displayPlayerInfo(playerName));
         String color = JOptionPane.showInputDialog("Enter color {yellow, red, green}: ");
         Player player = new Bird(playerName, color);
-        var frame = new GameFrame(player, info,color);
+        var frame = new GameFrame(player, info);
         frame.startGame();
     }
 
     /**
-     * load information about player, his last activity and highscore
+     * Deserializes saved state of object info.
+     * Info contains information about saved players (name, high score, last activity).
+     * Uses ObjectInputStream.
+     *
      */
     private static void loadInfo() {
         try {
@@ -44,8 +51,8 @@ public class Main {
     }
 
     /**
-     * add player if not exists
-     * @param player player name
+     * Adds player if not exists
+     * @param player player's name
      */
     private static void checkPlayer(String player){
         if(!info.checkIfPlayerExists(player))

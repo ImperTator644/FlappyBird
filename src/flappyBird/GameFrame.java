@@ -2,19 +2,25 @@ package flappyBird;
 
 import javax.swing.*;
 
+/**
+ * Creates game frame, initializes game panel and starts the game.
+ *  @author Blicharz, Kaczynski, Filiciak
+ *  @version 1.0.7
+ */
 public class GameFrame extends JFrame {
+    /**
+     * Panel of the game
+     */
     private final GamePanel panel;
 
     /**
-     * responsible for game frame
-     * @param player player state
-     * @param info game state
-     * @param color player color
+     * Creates game frame
+     * @param player object of Player class
+     * @param info object of Info class, contains information about saved players
      */
-    public GameFrame(Player player, Info info,String color) {
+    public GameFrame(Player player, Info info) {
         ImageIcon background = new ImageIcon("src/images/background.png");
         ImageIcon icon = new ImageIcon("src/images/birdFlyYellow.png");
-        if(color.equals("beer")) background = new ImageIcon("src/images/backgroundTwo.png");
         panel = new GamePanel("", background, JLabel.CENTER, player, info);
         this.add(panel);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -26,6 +32,9 @@ public class GameFrame extends JFrame {
         this.setIconImage(icon.getImage());
     }
 
+    /**
+     * Initializes game panel and starts the game.
+     */
     public void startGame() {
         panel.initGame();
         panel.startGame();

@@ -12,7 +12,9 @@ import java.util.Random;
 import java.util.Queue;
 
 /**
- * operates game state
+ * Responsible for whole logic of the game
+ *  @author Blicharz, Kaczynski, Filiciak
+ *  @version 1.25.1
  */
 public class GamePanel extends JLabel implements ActionListener {
 
@@ -22,17 +24,45 @@ public class GamePanel extends JLabel implements ActionListener {
 
     private GamePanel.Movement movement = GamePanel.Movement.NONE;
 
+    /**
+     * Object player
+     */
     private final Player player;
+    /**
+     * Object score
+     */
     private final Score highScores;
-    protected static final int SCREEN_WIDTH = 500;
+    /**
+     * Width of the panel
+     */
+    private static final int SCREEN_WIDTH = 500;
+    /**
+     * Height of the panel
+     */
     protected static final int SCREEN_HEIGHT = 700;
-    protected static final int UNIT_SIZE = 10;
-    protected static final int PLAYER_SIZE = 3 * UNIT_SIZE;
-    protected static int gap = 20 * UNIT_SIZE;
+    /**
+     * Size of the unit.
+     * Unit is like a pixel in our panel. It is the smallest drawable piece of our screen.
+     */
+    private static final int UNIT_SIZE = 10;
+    /**
+     * Size of the player
+     */
+    private static final int PLAYER_SIZE = 3 * UNIT_SIZE;
+    private static int gap = 20 * UNIT_SIZE;
     private int level = 1;
-    protected static final int MOVE_TIMER_DELAY = 50;
-    protected static final int FLY_TIMER_DELAY = 10;
-    protected static final int TIMER_DELAY = 30;
+    /**
+     * Delay for jump timer
+     */
+    private static final int MOVE_TIMER_DELAY = 50;
+    /**
+     * Delay for fly timer
+     */
+    private static final int FLY_TIMER_DELAY = 10;
+    /**
+     * Delay for game timer
+     */
+    private static final int TIMER_DELAY = 30;
     private boolean running             = false;
     private boolean jump                = false;
     private boolean restart             = false;
@@ -45,17 +75,27 @@ public class GamePanel extends JLabel implements ActionListener {
     private Timer gameTimer;
     private Timer jumpTimer;
     private Timer flyTimer;
+    /**
+     * Object random
+     */
     private final Random random;
+    /**
+     * Queue for obstacles.
+     * We use queue for multiple obstacles appearance
+     */
     private final Queue<Obstacle> obstacles;
+    /**
+     * Object info
+     */
     private final Info info;
 
     /**
-     * stores all information about the game
-     * @param s
-     * @param background
-     * @param center
-     * @param player
-     * @param info
+     * Initializes crucial variables and creates game panel
+     * @param s JLabel text
+     * @param background image for background
+     * @param center place for the background
+     * @param player object of Player class
+     * @param info object of Info class, contains information about saved players
      */
     public GamePanel(String s, ImageIcon background, int center, Player player, Info info) {
         super(s,background,center);
@@ -68,6 +108,10 @@ public class GamePanel extends JLabel implements ActionListener {
         isImage = player.loadImage();
     }
 
+    /**
+     * Serializes current state of object info.
+     * Uses ObjectOutPutStream.
+     */
     private void saveInfo(){
         try{
             ObjectOutputStream output = new ObjectOutputStream(new FileOutputStream("src/info.dat"));
@@ -79,7 +123,12 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * determines button action
+     * Initializes game:
+     * - Adds keys bindings.
+     * - Creates timers.
+     * GameTimer: if 'restart' is true, puts default settings, else it is responsible for player and obstacles movement
+     * JumpTimer: responsible for key pressing delay
+     * FlyTimer: responsible for player constant fall
      */
     public void initGame() {
         addKeyPressedBinding("up.pressed", KeyEvent.VK_W, new MoveUDAction(GamePanel.Movement.UP));
@@ -129,6 +178,9 @@ public class GamePanel extends JLabel implements ActionListener {
         });
     }
 
+    /**
+     * Creates new obstacle and starts the timers
+     */
     public void startGame() {
         newObstacle();
         running = true;
@@ -138,7 +190,7 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * define which button is used
+     * Defines which button is used
      * @param name button name
      * @param keyCode button key
      * @param action action after button press
@@ -149,7 +201,7 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * metoda okreslajaca puszczenie przycisku
+     * Defines, which button is released
      * @param name button name
      * @param keyCode button key
      * @param action action after button release
@@ -160,7 +212,7 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * create action button
+     * Creates action button
      * @param name button name
      * @param ks button key
      * @param action action for which the button is responsible
@@ -173,11 +225,20 @@ public class GamePanel extends JLabel implements ActionListener {
         am.put(name, action);
     }
 
+    /**
+     * Responsible for repainting the scene
+     * @param g object encapsulates state information needed for the basic rendering operations that Java supports.
+     */
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
     }
 
+    /**
+     * If 'running' is true, puts all interface components in the correct place and draws them,
+     * else calls gameOver method
+     * @param g object encapsulates state information needed for the basic rendering operations that Java supports.
+     */
     private void draw(Graphics g) {
         if (running) {
             g.setColor(Color.red);
@@ -206,8 +267,9 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * determines game over
-     * @param g game over graphics
+     * Puts all game-over-interface components in the correct place and draws them.
+     * Checks if exit button is pressed (esc), if yes, stops the timers, updates player's information, serializes object info and closes the application
+     * @param g object encapsulates state information needed for the basic rendering operations that Java supports.
      */
     public void gameOver(Graphics g) {
         g.setColor(Color.red);
@@ -245,7 +307,8 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * method which creates obstacles
+     * Method which creates obstacles and adds them to queue.
+     * We use queue for multiple obstacles appearance
      */
     private void newObstacle() {
         Obstacle obstacle = new Obstacle();
@@ -255,7 +318,9 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * methods stands for moving obstacles
+     * Responsible for obstacles' movement.
+     * When one obstacle reaches 1/4 of the screen width, new obstacle is added to the queue.
+     * When obstacle reaches the edge, it is removed from the queue and player's score increases by one.
      */
     private void obstacleMove() {
         obstacles.forEach(obstacle ->
@@ -273,7 +338,7 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * check collision between player and obstacles
+     * Checks collision player - obstacle and player - screen border
      */
     private void checkCollisions() {
         int temp = Objects.requireNonNull(obstacles.peek()).getObstaclePosX();
@@ -293,7 +358,8 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * responsible for frame action, decreasing level by changing obstacles size
+     * Responsible for frame action, increases level for every 5 points scored by player.
+     * When level changes, gap between obstacles is getting thinner.
      * @param e action event
      */
     @Override
@@ -311,9 +377,10 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * stands for reset game state
+     * Inner class.
+     * Responsible for reset and exit keys.
      */
-    protected class ResetGame extends AbstractAction {
+    private class ResetGame extends AbstractAction {
         private boolean reset;
         private boolean exitGame;
         public ResetGame(GamePanel.ExitReset decision) {
@@ -328,9 +395,10 @@ public class GamePanel extends JLabel implements ActionListener {
     }
 
     /**
-     * stands for moving player
+     * Inner class.
+     * Responsible movement controls.
      */
-    protected class MoveUDAction extends AbstractAction {
+    private class MoveUDAction extends AbstractAction {
         private final GamePanel.Movement UDmovement;
 
         public MoveUDAction(GamePanel.Movement movement) {
